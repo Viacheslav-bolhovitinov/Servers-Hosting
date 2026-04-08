@@ -11,9 +11,12 @@ class Server
     public string $status;
     public int $slots;
     public ?string $price;
+    public ?float $price_per_hour;
     public ?string $description;
     public ?string $reserved_by;
     public ?string $reserved_until;
+
+    protected static array $fillable = ['name', 'game', 'ip', 'slots', 'status', 'description', 'price', 'price_per_hour', 'reserved_by', 'reserved_until'];
 
     private static array $data = [
         1 => [
@@ -54,10 +57,24 @@ class Server
         ],
     ];
 
-    public function __construct(array $attributes)
+    public function __construct(array $attributes = [])
     {
+        $this->id = 0;
+        $this->name = '';
+        $this->game = '';
+        $this->ip = '';
+        $this->status = '';
+        $this->slots = 0;
+        $this->price = null;
+        $this->price_per_hour = null;
+        $this->description = null;
+        $this->reserved_by = null;
+        $this->reserved_until = null;
+
         foreach ($attributes as $key => $value) {
-            $this->{$key} = $value;
+            if (property_exists($this, $key)) {
+                $this->{$key} = $value;
+            }
         }
     }
 
@@ -78,19 +95,92 @@ class Server
 
     public static function all(array $excludeIds = []): array
     {
-        return array_values(array_map(function (array $item) {
-            return new self($item);
-        }, array_filter(self::$data, function (array $item) use ($excludeIds) {
+        $excludeIds = array_map('intval', $excludeIds);
+        $data = self::getData();
+        $filtered = array_filter($data, function (array $item) use ($excludeIds) {
             return !in_array($item['id'], $excludeIds, true);
-        })));
+        });
+
+        return array_map(function (array $item) {
+            return new self($item);
+        }, $filtered);
     }
 
     public static function find(int $id, array $excludeIds = []): ?self
     {
+        $excludeIds = array_map('intval', $excludeIds);
+
         if (in_array($id, $excludeIds, true)) {
             return null;
         }
 
-        return isset(self::$data[$id]) ? new self(self::$data[$id]) : null;
+        $data = self::getData();
+        return isset($data[$id]) ? new self($data[$id]) : null;
+    }
+
+    public static function create(array $attributes): self
+    {
+        $data = self::getData();
+        $maxId = !empty($data) ? max(array_keys($data)) : 0;
+        $newId = $maxId + 1;
+
+        $attributes['id'] = $newId;
+        $attributes['reserved_by'] = $attributes['reserved_by'] ?? null;
+        $attributes['reserved_until'] = $attributes['reserved_until'] ?? null;
+        $attributes['price'] = $attributes['price'] ?? null;
+        $attributes['price_per_hour'] = isset($attributes['price_per_hour']) ? (float) $attributes['price_per_hour'] : null;
+
+        $data[$newId] = $attributes;
+        self::saveData($data);
+
+        return new self($attributes);
+    }
+
+    public static function update(int $id, array $attributes): ?self
+    {
+        $data = self::getData();
+
+        if (!isset($data[$id])) {
+            return null;
+        }
+
+        $data[$id]['name'] = $attributes['name'];
+        $data[$id]['game'] = $attributes['game'];
+        $data[$id]['ip'] = $attributes['ip'];
+        $data[$id]['slots'] = $attributes['slots'];
+        $data[$id]['status'] = $attributes['status'];
+        $data[$id]['description'] = $attributes['description'] ?? null;
+        $data[$id]['price_per_hour'] = isset($attributes['price_per_hour']) ? (float) $attributes['price_per_hour'] : null;
+
+        self::saveData($data);
+
+        return new self($data[$id]);
+    }
+
+    private static function getData(): array
+    {
+        $data = self::$data;
+        $sessionData = session('servers_data', []);
+
+        foreach ($sessionData as $id => $server) {
+            $data[$id] = $server;
+        }
+
+        return $data;
+    }
+
+    private static function saveData(array $data): void
+    {
+        $customData = [];
+        $baseIds = array_keys(self::$data);
+        
+        foreach ($data as $id => $server) {
+            if (!in_array($id, $baseIds, true)) {
+                $customData[$id] = $server;
+            }
+        }
+        
+        session(['servers_data' => $customData]);
+        session()->save();
     }
 }

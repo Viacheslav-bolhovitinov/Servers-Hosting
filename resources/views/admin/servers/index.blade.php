@@ -8,10 +8,15 @@
             <h1 class="h3 text-white">Адмін: список серверів</h1>
             <p class="text-secondary mb-0">Тут відображається таблиця серверів.</p>
         </div>
+        <a href="{{ route('admin.servers.create') }}" class="btn btn-success">+ Додати сервер</a>
     </div>
 
+    @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+
     @if(session('status'))
-        <div class="alert alert-success">{{ session('status') }}</div>
+        <div class="alert alert-info">{{ session('status') }}</div>
     @endif
 
     <div class="table-responsive">
@@ -23,6 +28,7 @@
                     <th>IP</th>
                     <th>Статус</th>
                     <th>Слоти</th>
+                    <th>Ціна/год</th>
                     <th class="text-end">Дії</th>
                 </tr>
             </thead>
@@ -34,9 +40,11 @@
                         <td>{{ $server->ip }}</td>
                         <td>{{ $server->status === 'active' ? 'активний' : 'вимкнений' }}</td>
                         <td>{{ $server->slots }}</td>
+                        <td>{{ $server->price_per_hour ? number_format($server->price_per_hour, 2) . ' грн' : '—' }}</td>
                         <td class="text-end">
-                            <a href="{{ route('admin.servers.show', $server) }}" class="btn btn-sm btn-primary me-2">Переглянути</a>
-                            <form method="POST" action="{{ route('admin.servers.destroy', $server) }}" class="d-inline" onsubmit="return confirm('Ти точно хочеш видалити сервер?');">
+                            <a href="{{ route('admin.servers.edit', $server->id) }}" class="btn btn-sm btn-warning me-2">Редагувати</a>
+                            <a href="{{ route('admin.servers.show', $server->id) }}" class="btn btn-sm btn-primary me-2">Переглянути</a>
+                            <form method="POST" action="{{ route('admin.servers.destroy', $server->id) }}" class="d-inline" onsubmit="return confirm('Ти точно хочеш видалити сервер?');">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-danger">Видалити</button>

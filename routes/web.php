@@ -12,14 +12,9 @@ Route::get('/about', [MainController::class, 'about']);
 
 Route::get('/servers', [ServerController::class, 'index']);
 
-Route::get('/servers/{id}', [ServerController::class, 'show']);
+Route::get('/servers/{id}', [ServerController::class, 'show'])->name('servers.show');
 
 Route::prefix('admin')->name('admin.')->group(function () {
-    Route::bind('server', function ($value) {
-        $deleted = request()->session()->get('deleted_servers', []);
-        return Server::find((int) $value, $deleted);
-    });
-
     Route::resource('servers', AdminServerController::class)
-        ->only(['index', 'show', 'destroy']);
+        ->only(['index', 'show', 'destroy', 'create', 'store', 'edit', 'update']);
 });

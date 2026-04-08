@@ -20,8 +20,8 @@
                     <div>{{ $server->slots }}</div>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <div class="text-secondary">Ціна</div>
-                    <div>{{ $server->price ?? 'немає' }}</div>
+                    <div class="text-secondary">Ціна за годину</div>
+                    <div>{{ $server->price_per_hour ? number_format($server->price_per_hour, 2) . ' грн' : 'немає' }}</div>
                 </div>
             </div>
 
