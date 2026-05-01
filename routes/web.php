@@ -14,7 +14,9 @@ Route::get('/servers', [ServerController::class, 'index']);
 
 Route::get('/servers/{id}', [ServerController::class, 'show'])->name('servers.show');
 
-Route::prefix('admin')->name('admin.')->group(function () {
+Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::resource('servers', AdminServerController::class)
         ->only(['index', 'show', 'destroy', 'create', 'store', 'edit', 'update']);
 });
+
+require __DIR__.'/auth.php';
