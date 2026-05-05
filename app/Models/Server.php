@@ -57,6 +57,11 @@ class Server
         ],
     ];
 
+    private static function getDeletedIds(): array
+    {
+        return array_map('intval', session('deleted_servers', []));
+    }
+
     public function __construct(array $attributes = [])
     {
         $this->id = 0;
@@ -95,7 +100,7 @@ class Server
 
     public static function all(array $excludeIds = []): array
     {
-        $excludeIds = array_map('intval', $excludeIds);
+        $excludeIds = array_unique(array_merge(self::getDeletedIds(), array_map('intval', $excludeIds)));
         $data = self::getData();
         $filtered = array_filter($data, function (array $item) use ($excludeIds) {
             return !in_array($item['id'], $excludeIds, true);
@@ -108,7 +113,7 @@ class Server
 
     public static function find(int $id, array $excludeIds = []): ?self
     {
-        $excludeIds = array_map('intval', $excludeIds);
+        $excludeIds = array_unique(array_merge(self::getDeletedIds(), array_map('intval', $excludeIds)));
 
         if (in_array($id, $excludeIds, true)) {
             return null;
@@ -140,21 +145,43 @@ class Server
     {
         $data = self::getData();
 
-        if (!isset($data[$id])) {
+        if (!isset($data[$id]) || in_array($id, self::getDeletedIds(), true)) {
             return null;
         }
 
-        $data[$id]['name'] = $attributes['name'];
-        $data[$id]['game'] = $attributes['game'];
-        $data[$id]['ip'] = $attributes['ip'];
-        $data[$id]['slots'] = $attributes['slots'];
-        $data[$id]['status'] = $attributes['status'];
-        $data[$id]['description'] = $attributes['description'] ?? null;
-        $data[$id]['price_per_hour'] = isset($attributes['price_per_hour']) ? (float) $attributes['price_per_hour'] : null;
+        $server = $data[$id];
 
+        foreach ($attributes as $key => $value) {
+            if (in_array($key, self::$fillable, true)) {
+                if ($key === 'price_per_hour') {
+                    $server[$key] = isset($value) ? (float) $value : null;
+                } else {
+                    $server[$key] = $value;
+                }
+            }
+        }
+
+        $data[$id] = $server;
         self::saveData($data);
 
-        return new self($data[$id]);
+        return new self($server);
+    }
+
+    public static function destroy(int $id): bool
+    {
+        $data = self::getData();
+
+        if (!isset($data[$id]) || in_array($id, self::getDeletedIds(), true)) {
+            return false;
+        }
+
+        $deleted = self::getDeletedIds();
+        $deleted[] = $id;
+
+        session(['deleted_servers' => $deleted]);
+        session()->save();
+
+        return true;
     }
 
     private static function getData(): array
