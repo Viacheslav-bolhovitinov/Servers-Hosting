@@ -1,8 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 function ServerCard({ name, game, slots, price, status, description, icon }) {
-  const [hours, setHours] = useState(1);
+  const [hours, setHours] = useState(() => {
+    const saved = localStorage.getItem(`server_hours_${name.replace(/ /g, '_')}`);
+    return saved ? parseInt(saved, 10) : 1;
+  });
   const [booked, setBooked] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem(`server_hours_${name.replace(/ /g, '_')}`, hours);
+  }, [hours, name]);
 
   const increase = () => setHours((prev) => prev + 1);
   const decrease = () => setHours((prev) => (prev > 1 ? prev - 1 : 1));
@@ -70,3 +77,4 @@ function ServerCard({ name, game, slots, price, status, description, icon }) {
 }
 
 export default ServerCard;
+
