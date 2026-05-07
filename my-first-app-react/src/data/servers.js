@@ -1,0 +1,48 @@
+const servers = [
+  {
+    id: 1,
+    name: 'CS2 Competitive',
+    game: 'CS2',
+    ip: '94.23.34.12',
+    slots: 10,
+    price: 200,
+    status: 'active',
+    description: 'Сервер для змагальних матчів 5v5 з високою якістю роботи.',
+    icon: '🎯',
+  },
+  {
+    id: 2,
+    name: 'Rust Survival',
+    game: 'Rust',
+    ip: '45.79.20.55',
+    slots: 50,
+    price: 300,
+    status: 'active',
+    description: 'Виживання у відкритому світі з дружньою спільнотою.',
+    icon: '🏕️',
+  },
+  {
+    id: 3,
+    name: 'Minecraft SkyBlock',
+    game: 'Minecraft',
+    ip: '178.62.45.101',
+    slots: 20,
+    price: 150,
+    status: 'off',
+    description: 'Класичний SkyBlock сервер з активною спільнотою.',
+    icon: '⛏️',
+  },
+  {
+    id: 4,
+    name: 'Valheim Vikings',
+    game: 'Valheim',
+    ip: '91.108.4.22',
+    slots: 16,
+    price: 180,
+    status: 'active',
+    description: 'Скандинавське виживання для справжніх вікінгів.',
+    icon: '⚔️',
+  },
+];
+
+export default servers;
