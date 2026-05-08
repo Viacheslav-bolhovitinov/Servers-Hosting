@@ -12,6 +12,7 @@ function Header() {
         <Link to="/" className="header__nav-link">Головна</Link>
         <Link to="/catalog" className="header__nav-link">Каталог</Link>
         <Link to="/#about" className="header__nav-link">Про нас</Link>
+        <Link to="/contacts" className="header__nav-link">Контакти</Link>
       </nav>
     </header>
   );

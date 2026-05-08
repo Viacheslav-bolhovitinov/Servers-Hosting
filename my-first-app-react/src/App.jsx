@@ -7,6 +7,7 @@ import HomePage from './pages/HomePage';
 import CatalogPage from './pages/CatalogPage';
 import ServerDetails from './pages/ServerDetails';
 import BookDetails from './pages/BookDetails';
+import ContactPage from './pages/ContactPage';
 import './App.css';
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
           <Route path="/catalog" element={<CatalogPage />} />
           <Route path="/server/:id" element={<ServerDetails />} />
           <Route path="/book/:id" element={<BookDetails />} />
+          <Route path="/contacts" element={<ContactPage />} />
         </Routes>
         <Footer />
       </div>
