@@ -264,3 +264,174 @@
 .server-card__book-btn--success {
   background-color: #16a34a !important;
 }
+
+/* ===== CATALOG PAGE ===== */
+.catalog-page__hero {
+  text-align: center;
+  padding: 60px 40px 20px;
+  background: linear-gradient(135deg, #0d0d0d 0%, #1a1040 100%);
+}
+
+.catalog-page__title {
+  font-size: 40px;
+  font-weight: 800;
+  color: #f1f1f1;
+  margin-bottom: 12px;
+}
+
+.catalog-page__subtitle {
+  font-size: 16px;
+  color: #9ca3af;
+}
+
+/* ===== SERVER DETAILS PAGE ===== */
+.server-details {
+  max-width: 800px;
+  margin: 60px auto;
+  padding: 0 40px;
+  flex: 1;
+}
+
+.server-details--not-found {
+  text-align: center;
+  padding: 80px 40px;
+}
+
+.server-details--not-found h2 {
+  font-size: 28px;
+  color: #f1f1f1;
+  margin-bottom: 16px;
+}
+
+.server-details--not-found p {
+  color: #9ca3af;
+  margin-bottom: 32px;
+}
+
+.server-details__back {
+  margin-bottom: 24px;
+}
+
+.server-details__back-link {
+  color: #818cf8;
+  text-decoration: none;
+  font-size: 15px;
+  transition: color 0.2s;
+}
+
+.server-details__back-link:hover {
+  color: #a5b4fc;
+}
+
+.server-details__card {
+  background-color: #1a1a2e;
+  border: 1px solid #2d2d4e;
+  border-radius: 16px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.server-details__header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.server-details__icon {
+  font-size: 48px;
+}
+
+.server-details__name {
+  font-size: 28px;
+  font-weight: 800;
+  color: #f1f1f1;
+  margin: 0 0 6px;
+}
+
+.server-details__game {
+  font-size: 15px;
+  color: #818cf8;
+  font-weight: 600;
+}
+
+.server-details__status {
+  margin-left: auto;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 20px;
+}
+
+.server-details__status--online {
+  color: #4ade80;
+  background-color: rgba(74, 222, 128, 0.1);
+  border: 1px solid rgba(74, 222, 128, 0.3);
+}
+
+.server-details__status--offline {
+  color: #f87171;
+  background-color: rgba(248, 113, 113, 0.1);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+}
+
+.server-details__description {
+  font-size: 16px;
+  color: #9ca3af;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.server-details__info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.server-details__info-item {
+  background-color: rgba(79, 70, 229, 0.08);
+  border-radius: 10px;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.server-details__info-label {
+  font-size: 12px;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.server-details__info-value {
+  font-size: 16px;
+  color: #e0e0e0;
+  font-weight: 600;
+}
+
+.server-details__cta {
+  display: block;
+  text-align: center;
+  margin-top: 8px;
+}
+
+/* ===== SERVER CARD — details link ===== */
+.server-card__details-link {
+  display: block;
+  text-align: center;
+  color: #818cf8;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px;
+  border: 1px solid #2d2d4e;
+  border-radius: 8px;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.server-card__details-link:hover {
+  background-color: rgba(79, 70, 229, 0.1);
+  border-color: #4f46e5;
+}

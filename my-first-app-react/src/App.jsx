@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
-import Main from './components/Main';
-import ServerList from './components/ServerList';
 import Footer from './components/Footer';
 import PromoBanner from './components/PromoBanner';
+import HomePage from './pages/HomePage';
+import CatalogPage from './pages/CatalogPage';
+import ServerDetails from './pages/ServerDetails';
+import BookDetails from './pages/BookDetails';
 import './App.css';
 
 function App() {
@@ -27,13 +30,19 @@ function App() {
   }
 
   return (
-    <div className="app">
-      <PromoBanner />
-      <Header />
-      <Main />
-      <ServerList />
-      <Footer />
-    </div>
+    <BrowserRouter>
+      <div className="app app-layout">
+        <PromoBanner />
+        <Header />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/catalog" element={<CatalogPage />} />
+          <Route path="/server/:id" element={<ServerDetails />} />
+          <Route path="/book/:id" element={<BookDetails />} />
+        </Routes>
+        <Footer />
+      </div>
+    </BrowserRouter>
   );
 }
 

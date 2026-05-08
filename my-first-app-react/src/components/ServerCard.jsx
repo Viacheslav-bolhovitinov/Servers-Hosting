@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
-function ServerCard({ name, game, slots, price, status, description, icon }) {
+function ServerCard({ id, name, game, slots, price, status, description, icon }) {
   const [hours, setHours] = useState(() => {
     const saved = localStorage.getItem(`server_hours_${name.replace(/ /g, '_')}`);
     return saved ? parseInt(saved, 10) : 1;
@@ -64,6 +65,10 @@ function ServerCard({ name, game, slots, price, status, description, icon }) {
       <div className="server-card__total">
         Разом: <strong>{totalPrice} грн</strong>
       </div>
+
+      <Link to={`/book/${id}`} className="server-card__details-link">
+        Детальніше →
+      </Link>
 
       <button
         className={`server-card__book-btn ${booked ? 'server-card__book-btn--success' : ''}`}
