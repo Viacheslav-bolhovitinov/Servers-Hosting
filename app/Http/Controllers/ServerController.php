@@ -9,16 +9,14 @@ class ServerController extends Controller
 {
     public function index()
     {
-        $deleted = array_map('intval', session('deleted_servers', []));
-        $servers = Server::all($deleted);
+        $servers = Server::all();
 
         return view('servers.index', compact('servers'));
     }
 
     public function show($id)
     {
-        $deleted = array_map('intval', session('deleted_servers', []));
-        $server = Server::find((int) $id, $deleted);
+        $server = Server::find($id);
 
         if (!$server) {
             return redirect('/servers')->with('error', 'Сервер не знайдено');

@@ -10,8 +10,7 @@ class ServerController extends Controller
 {
     public function index()
     {
-        $deleted = array_map('intval', session('deleted_servers', []));
-        $servers = Server::all($deleted);
+        $servers = Server::all();
 
         return view('admin.servers.index', compact('servers'));
     }
@@ -33,7 +32,17 @@ class ServerController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        Server::create($validated);
+        $serverData = [
+            'name' => $validated['name'],
+            'game' => $validated['game'],
+            'ip' => $validated['ip'],
+            'slots' => $validated['slots'],
+            'status' => $validated['status'],
+            'description' => $validated['description'] ?? null,
+            'price' => isset($validated['price_per_hour']) ? (string) $validated['price_per_hour'] : null,
+        ];
+
+        Server::create($serverData);
 
         return redirect()->route('admin.servers.index')
             ->with('success', 'Сервер успішно додано');
@@ -63,7 +72,22 @@ class ServerController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        $server = Server::update($id, $validated);
+        $server = Server::find($id);
+
+        if (! $server) {
+            return redirect()->route('admin.servers.index')
+                ->with('status', 'Сервер не знайдено.');
+        }
+
+        $server->update([
+            'name' => $validated['name'],
+            'game' => $validated['game'],
+            'ip' => $validated['ip'],
+            'slots' => $validated['slots'],
+            'status' => $validated['status'],
+            'description' => $validated['description'] ?? null,
+            'price' => isset($validated['price_per_hour']) ? (string) $validated['price_per_hour'] : null,
+        ]);
 
         if (!$server) {
             return redirect()->route('admin.servers.index')
@@ -76,10 +100,9 @@ class ServerController extends Controller
 
     public function show($id)
     {
-        $deleted = array_map('intval', session('deleted_servers', []));
-        $server = Server::find((int) $id, $deleted);
+        $server = Server::find((int) $id);
 
-        if (!$server) {
+        if (! $server) {
             return redirect()->route('admin.servers.index')
                 ->with('status', 'Сервер не знайдено.');
         }
@@ -91,19 +114,12 @@ class ServerController extends Controller
     {
         $server = Server::find((int) $id);
 
-        if (!$server) {
+        if (! $server) {
             return redirect()->route('admin.servers.index')
                 ->with('status', 'Сервер не знайдено.');
         }
 
-        $deleted = session('deleted_servers', []);
-
-        if (!in_array($server->id, $deleted, true)) {
-            $deleted[] = $server->id;
-            session()->put('deleted_servers', $deleted);
-        }
-
-        session()->save();
+        $server->delete();
 
         return redirect()->route('admin.servers.index')
             ->with('status', "Сервер \"{$server->name}\" видалено.");

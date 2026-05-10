@@ -46,6 +46,6 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('admin.servers.index', absolute: false));
+        return redirect()->intended('/servers');
     }
 }

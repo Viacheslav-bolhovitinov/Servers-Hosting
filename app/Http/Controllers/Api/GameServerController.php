@@ -8,17 +8,22 @@ use Illuminate\Http\Request;
 
 class GameServerController extends Controller
 {
-    public function index()
+    // GET /api/servers?game=CS2
+    public function index(Request $request)
     {
-        $servers = Server::all();
+        $query = Server::query();
 
-        return response()->json($servers);
+        if ($request->has('game') && $request->game !== 'all') {
+            $query->where('game', $request->game);
+        }
+
+        return response()->json($query->get());
     }
 
+    // GET /api/servers/{id}
     public function show($id)
     {
-        $server = Server::find((int) $id);
-
+        $server = Server::find($id);
         if (! $server) {
             return response()->json(['message' => 'Server not found'], 404);
         }
@@ -26,60 +31,32 @@ class GameServerController extends Controller
         return response()->json($server);
     }
 
+    // POST /api/servers/store
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'game' => 'required|string|max:255',
-            'ip' => 'required|string|max:255',
-            'slots' => 'required|integer|min:1',
-            'price_per_hour' => 'nullable|numeric|min:0',
-            'status' => 'nullable|string|max:255',
-            'description' => 'nullable|string',
-            'reserved_by' => 'nullable|string|max:255',
-            'reserved_until' => 'nullable|date',
-        ]);
-
-        $server = Server::create($validated);
-
+        $server = Server::create($request->all());
         return response()->json($server, 201);
     }
 
+    // PUT /api/servers/{id}
     public function update(Request $request, $id)
     {
-        $server = Server::find((int) $id);
-
+        $server = Server::find($id);
         if (! $server) {
             return response()->json(['message' => 'Server not found'], 404);
         }
-
-        $validated = $request->validate([
-            'name' => 'sometimes|required|string|max:255',
-            'game' => 'sometimes|required|string|max:255',
-            'ip' => 'sometimes|required|string|max:255',
-            'slots' => 'sometimes|required|integer|min:1',
-            'price_per_hour' => 'sometimes|nullable|numeric|min:0',
-            'status' => 'sometimes|nullable|string|max:255',
-            'description' => 'sometimes|nullable|string',
-            'reserved_by' => 'sometimes|nullable|string|max:255',
-            'reserved_until' => 'sometimes|nullable|date',
-        ]);
-
-        $server = Server::update((int) $id, $validated);
-
+        $server->update($request->all());
         return response()->json($server);
     }
 
+    // DELETE /api/servers/{id}
     public function destroy($id)
     {
-        $server = Server::find((int) $id);
-
+        $server = Server::find($id);
         if (! $server) {
             return response()->json(['message' => 'Server not found'], 404);
         }
-
-        Server::destroy((int) $id);
-
+        $server->delete();
         return response()->json(['message' => 'Server deleted successfully']);
     }
 }
