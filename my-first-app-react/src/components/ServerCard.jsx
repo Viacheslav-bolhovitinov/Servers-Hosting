@@ -21,7 +21,8 @@ function ServerCard({ id, name, game, slots, price, status, description, icon })
     setTimeout(() => setBooked(false), 2500);
   };
 
-  const totalPrice = price * hours;
+  const numericPrice = Number(String(price).replace(/[^0-9.-]+/g, '')) || 0;
+  const totalPrice = numericPrice * hours;
 
   return (
     <div className={`server-card ${status !== 'active' ? 'server-card--offline' : ''}`}>
@@ -66,7 +67,7 @@ function ServerCard({ id, name, game, slots, price, status, description, icon })
         Разом: <strong>{totalPrice} грн</strong>
       </div>
 
-      <Link to={`/book/${id}`} className="server-card__details-link">
+      <Link to={`/server/${id}`} className="server-card__details-link">
         Детальніше →
       </Link>
 
